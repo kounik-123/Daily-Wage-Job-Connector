@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="h5 mb-3">Profile Settings</h3>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="<%= me && me.name %>" placeholder="Your name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="<%= me && me.email %>" disabled />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Role</label>
+            <input type="text" class="form-control" value="<%= me && me.role %>" disabled />
+          </div>
+          <div class="text-end">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-save me-1"></i>Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

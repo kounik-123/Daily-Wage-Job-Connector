@@ -1,0 +1,152 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Worker Dashboard</h3>
+  <div class="d-flex align-items-center gap-2">
+    <input class="form-control form-control-sm" style="width: 240px" type="search" placeholder="Search jobs..." onkeydown="if(event.key==='Enter'){window.location='/jobs/available?q='+encodeURIComponent(this.value)}" />
+    <a href="/notifications" class="btn btn-light btn-sm" title="Notifications"><i class="bi bi-bell"></i></a>
+    <a href="/settings" class="btn btn-light btn-sm" title="Settings"><i class="bi bi-gear"></i></a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-lg-8">
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="card kk-glass kk-glass-blue text-white text-center">
+          <div class="card-body">
+            <div class="d-flex justify-content-center align-items-center mb-2">
+              <div class="kk-metric-icon bg-white bg-opacity-20">
+                <i class="bi bi-send-check-fill"></i>
+              </div>
+            </div>
+            <div class="small text-white-50">Total Applied</div>
+            <div class="fs-4 fw-bold"><%= stats.totalApplied %></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card kk-glass kk-glass-green text-white text-center">
+          <div class="card-body">
+            <div class="d-flex justify-content-center align-items-center mb-2">
+              <div class="kk-metric-icon bg-white bg-opacity-20">
+                <i class="bi bi-check2-circle"></i>
+              </div>
+            </div>
+            <div class="small text-white-50">Jobs Completed</div>
+            <div class="fs-4 fw-bold"><%= stats.jobsCompleted %></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card kk-glass kk-glass-purple text-white text-center">
+          <div class="card-body">
+            <div class="d-flex justify-content-center align-items-center mb-2">
+              <div class="kk-metric-icon bg-white bg-opacity-20">
+                <i class="bi bi-wallet2"></i>
+              </div>
+            </div>
+            <div class="small text-white-50">Current Balance</div>
+            <div class="fs-4 fw-bold">₹<%= stats.currentBalance %></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card kk-glass kk-glass-orange text-white text-center">
+          <div class="card-body">
+            <div class="d-flex justify-content-center align-items-center mb-2">
+              <div class="kk-metric-icon bg-white bg-opacity-20">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+            </div>
+            <div class="small text-white-50">Pending Payments</div>
+            <div class="fs-4 fw-bold">₹<%= stats.pendingPayments %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0">Monthly Earnings</h6>
+          <small class="text-muted">Last 12 months</small>
+        </div>
+        <div class="chart-container" style="position:relative; height:280px; width:100%">
+          <canvas id="earningsChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h6 class="mb-2">Recommended Jobs</h6>
+        <div class="row g-2">
+          <% if (!recommendedJobs || !recommendedJobs.length) { %>
+            <div class="col-12"><div class="alert alert-info mb-0">No recommendations right now.</div></div>
+          <% } %>
+          <% recommendedJobs.forEach(j => { %>
+            <div class="col-12 col-md-6">
+              <div class="card job-card h-100">
+                <div class="card-body">
+                  <div class="fw-semibold"><%= j.title %></div>
+                  <div class="text-muted small mb-2">₹<%= j.wage %> • <%= j.location %></div>
+                  <form method="post" action="/jobs/<%= j._id %>/apply">
+                    <button class="btn btn-primary btn-sm" type="submit">Apply</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="mb-2">Messages</h6>
+        <div class="list-group list-group-flush">
+          <% if (!messages || !messages.length) { %>
+            <div class="text-muted small">No recent messages.</div>
+          <% } %>
+          <% messages.forEach(m => { %>
+            <div class="list-group-item">
+              <div class="small text-muted"><%= new Date(m.createdAt).toLocaleString() %></div>
+              <div><%= m.message %></div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  (function(){
+    const labels = <%- JSON.stringify(earningsByMonth.map(e => e.label)) %>;
+    const data = <%- JSON.stringify(earningsByMonth.map(e => e.total)) %>;
+    const ctx = document.getElementById('earningsChart');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Earnings (₹)',
+            data,
+            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+            borderColor: 'rgba(30, 58, 138, 1)',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+  })();
+</script>

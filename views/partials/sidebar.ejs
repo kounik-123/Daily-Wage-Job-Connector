@@ -1,0 +1,32 @@
+<div class="p-3">
+  <div class="d-grid gap-2 sidebar-menu mt-2">
+    <% if (!user || user.role !== 'worker') { %>
+      <a href="/dashboards/user" class="btn btn-outline-secondary <%= currentPath === '/dashboards/user' ? 'active' : '' %>"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+      <a href="/jobs" class="btn btn-outline-secondary <%= currentPath === '/jobs' ? 'active' : '' %>"><i class="bi bi-plus-circle me-2"></i>Create a Job</a>
+      <a href="/jobs/active" class="btn btn-outline-secondary <%= currentPath === '/jobs/active' ? 'active' : '' %>"><i class="bi bi-briefcase me-2"></i>Active Jobs</a>
+      <a href="/jobs/past" class="btn btn-outline-secondary <%= currentPath === '/jobs/past' ? 'active' : '' %>"><i class="bi bi-archive me-2"></i>Past Jobs</a>
+      <a href="/wallet" class="btn btn-outline-secondary <%= currentPath === '/wallet' ? 'active' : '' %>"><i class="bi bi-wallet2 me-2"></i>Wallet</a>
+    <% } else if (user && user.role === 'worker') { %>
+      <a href="/dashboards/worker" class="btn btn-outline-secondary <%= currentPath === '/dashboards/worker' ? 'active' : '' %>"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+      <a href="/jobs/available" class="btn btn-outline-secondary <%= currentPath === '/jobs/available' ? 'active' : '' %>"><i class="bi bi-search me-2"></i>Available Jobs</a>
+      <a href="/jobs/active" class="btn btn-outline-secondary <%= currentPath === '/jobs/active' ? 'active' : '' %>"><i class="bi bi-briefcase me-2"></i>Active Jobs</a>
+      <a href="/jobs/past" class="btn btn-outline-secondary <%= currentPath === '/jobs/past' ? 'active' : '' %>"><i class="bi bi-archive me-2"></i>Past Jobs</a>
+      <a href="/wallet" class="btn btn-outline-secondary <%= currentPath === '/wallet' ? 'active' : '' %>"><i class="bi bi-wallet2 me-2"></i>Wallet</a>
+      <a href="/wishlist" class="btn btn-outline-secondary <%= currentPath === '/wishlist' ? 'active' : '' %>"><i class="bi bi-heart me-2"></i>Wishlist</a>
+    <% } else { %>
+      <a href="/jobs" class="btn btn-outline-secondary <%= currentPath === '/jobs' ? 'active' : '' %>"><i class="bi bi-plus-circle me-2"></i>Create a Job</a>
+      <a href="/jobs/available" class="btn btn-outline-secondary <%= currentPath === '/jobs/available' ? 'active' : '' %>"><i class="bi bi-search me-2"></i>Available Jobs</a>
+      <a href="/jobs/active" class="btn btn-outline-secondary <%= currentPath === '/jobs/active' ? 'active' : '' %>"><i class="bi bi-briefcase me-2"></i>Active Jobs</a>
+      <a href="/jobs/past" class="btn btn-outline-secondary <%= currentPath === '/jobs/past' ? 'active' : '' %>"><i class="bi bi-archive me-2"></i>Past Jobs</a>
+      <a href="/wallet" class="btn btn-outline-secondary <%= currentPath === '/wallet' ? 'active' : '' %>"><i class="bi bi-wallet2 me-2"></i>Wallet</a>
+    <% } %>
+  </div>
+  <div class="position-fixed bottom-0 start-0 p-3">
+    <div class="d-grid gap-2">
+      <a href="/settings" class="btn btn-outline-secondary <%= currentPath === '/settings' ? 'active' : '' %>"><i class="bi bi-gear me-2"></i>Settings</a>
+      <form method="post" action="/auth/logout">
+        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</button>
+      </form>
+    </div>
+  </div>
+</div>

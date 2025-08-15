@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Active Jobs</h3>
+  <a href="/jobs" class="btn btn-primary">Create Job</a>
+</div>
+<div class="row g-3">
+  <% if (!jobs || jobs.length === 0) { %>
+    <div class="col-12"><div class="alert alert-info">No active jobs yet.</div></div>
+  <% } %>
+  <% jobs.forEach(j => { %>
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5><%= j.title %></h5>
+          <p class="text-muted mb-1">Wage: ₹<%= j.wage %></p>
+          <p class="mb-1">Location: <%= j.location %></p>
+          <p class="small">Deadline: <%= j.deadline ? new Date(j.deadline).toDateString() : 'N/A' %></p>
+          <p class="small text-success">Applied by: <%= j.appliedBy ? j.appliedBy.name : 'No one yet' %></p>
+          <div class="d-flex gap-2">
+            <a class="btn btn-primary btn-sm" href="/jobs/<%= j._id %>"><i class="bi bi-eye me-1"></i>View Details</a>
+            <a class="btn btn-outline-secondary btn-sm" href="/jobs/<%= j._id %>/edit"><i class="bi bi-pencil me-1"></i>Edit</a>
+            <form method="post" action="/jobs/<%= j._id %>/complete">
+              <button class="btn btn-outline-success btn-sm" type="submit">Mark Complete</button>
+            </form>
+            <form method="post" action="/jobs/<%= j._id %>/delete" data-confirm="Delete this job? This cannot be undone.">
+              <button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-trash me-1"></i>Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>

@@ -1,0 +1,17 @@
+<h3>Completed Jobs</h3>
+<div class="row g-3 mt-2">
+  <% if (!jobs || jobs.length === 0) { %>
+    <div class="col-12"><div class="alert alert-info">No past jobs.</div></div>
+  <% } %>
+  <% jobs.forEach(j => { %>
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5><%= j.title %></h5>
+          <p class="text-muted mb-1">Wage: ₹<%= j.wage %></p>
+          <p class="mb-1">Completed on: <%= new Date(j.updatedAt).toDateString() %></p>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>

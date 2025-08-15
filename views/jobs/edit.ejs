@@ -1,0 +1,29 @@
+<h3>Edit Job</h3>
+<form method="post" action="/jobs/<%= job._id %>/edit" class="card p-3 shadow-sm mt-2">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Title</label>
+      <input class="form-control" type="text" name="title" value="<%- job.title %>" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Wage (Rupees)</label>
+      <input class="form-control" type="number" min="0" name="wage" value="<%- job.wage %>" required />
+    </div>
+    <div class="col-12">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" name="description" rows="4" required><%- job.description %></textarea>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Location</label>
+      <input class="form-control" type="text" name="location" value="<%- job.location %>" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Deadline</label>
+      <input class="form-control" type="date" name="deadline" value="<%- job.deadline ? new Date(job.deadline).toISOString().substring(0,10) : '' %>" />
+    </div>
+  </div>
+  <div class="d-flex gap-2 mt-3">
+    <button class="btn btn-primary" type="submit">Save Changes</button>
+    <a class="btn btn-outline-secondary" href="/jobs/active">Cancel</a>
+  </div>
+</form>

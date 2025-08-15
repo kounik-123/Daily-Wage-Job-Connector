@@ -1,0 +1,72 @@
+<% /* Toast container top-right below topbar */ %>
+<div class="toast-container" id="toast-container"></div>
+<!-- Floating Shapes -->
+  <div class="shape-container"></div>
+<section class="kk-bubble-bg py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card auth-card shadow-sm p-4">
+        <div class="text-center mb-3">
+          <div class="auth-icon bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </div>
+          <h3 class="mb-0 fw-semibold">Login</h3>
+        </div>
+
+        <form method="post" action="/auth/login">
+          <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input id="email" type="email" name="email" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" type="password" name="password" class="form-control" required />
+          </div>
+
+          <button class="btn btn-gradient-blue w-100 rounded-pill py-2" type="submit">Login</button>
+
+          <div class="text-center mt-3 small">
+            Don't have an account? <a href="/auth/signup" class="fw-semibold">Sign Up</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (typeof error !== 'undefined' && error) { %>
+<script>
+  (function(){
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast error has-progress show';
+
+    // build content with icon + message
+    const content = document.createElement('div');
+    content.className = 'toast-content';
+
+    const icon = document.createElement('span');
+    icon.className = 'toast-icon';
+    icon.innerHTML = '<i class="bi bi-x-circle-fill" style="color:#dc3545;"></i>';
+
+    const textWrap = document.createElement('div');
+    textWrap.innerHTML = '<strong>Login Failed</strong><div class="small text-muted">' + <%- JSON.stringify(error) %> + '</div>';
+
+    content.appendChild(icon);
+    content.appendChild(textWrap);
+    toast.appendChild(content);
+
+    // progress underline (3s)
+    const progress = document.createElement('div');
+    progress.className = 'toast-progress';
+    toast.appendChild(progress);
+
+    container.appendChild(toast);
+
+    // remove after 3 seconds
+    setTimeout(()=> { toast.remove(); }, 3000);
+  })();
+</script>
+<% } %>

@@ -1,0 +1,93 @@
+<section class="kk-bubble-bg py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card auth-card shadow-sm p-4">
+        <div class="text-center mb-3">
+          <div class="auth-icon bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <h3 class="mb-0 fw-semibold">Sign Up</h3>
+        </div>
+
+        <form id="signupForm" method="post" action="/auth/signup" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label" for="name">Full Name</label>
+            <input id="name" type="text" name="name" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input id="email" type="email" name="email" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" type="password" name="password" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <div class="form-label mb-1">Register as:</div>
+            <div class="d-flex align-items-center gap-4">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="role" id="role_user" value="user" checked>
+                <label class="form-check-label" for="role_user">Job Seeker</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="role" id="role_worker" value="worker">
+                <label class="form-check-label" for="role_worker">Job Poster</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Optional: include this if you still want to support profile photo on sign up
+          <div class="mb-3">
+            <label class="form-label" for="profilePhoto">Profile Photo (optional)</label>
+            <input id="profilePhoto" type="file" name="profilePhoto" class="form-control" accept="image/*" />
+          </div>
+          -->
+
+          <button class="btn btn-gradient-blue w-100 rounded-pill py-2" type="submit">Create Account</button>
+
+          <div class="text-center mt-3 small">
+            Already have an account? <a href="/auth/login" class="fw-semibold">Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Basic client-side confirm password check with live validation
+  (function () {
+    const form = document.getElementById('signupForm');
+    const pwd = document.getElementById('password');
+    const cpwd = document.getElementById('confirmPassword');
+
+    const validate = () => {
+      const a = (pwd.value || '').trim();
+      const b = (cpwd.value || '').trim();
+      if (a && b && a !== b) {
+        cpwd.setCustomValidity('Passwords do not match');
+        return false;
+      }
+      cpwd.setCustomValidity('');
+      return true;
+    };
+
+    pwd.addEventListener('input', validate);
+    cpwd.addEventListener('input', validate);
+
+    form.addEventListener('submit', function (e) {
+      if (!validate()) {
+        e.preventDefault();
+        cpwd.reportValidity();
+      }
+    });
+  })();
+</script>

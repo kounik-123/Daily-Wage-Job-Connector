@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h3 class="mb-0">My Wishlist</h3>
+</div>
+<div class="row g-3 mt-2">
+  <% if (!jobs || jobs.length === 0) { %>
+    <div class="col-12"><div class="alert alert-info">Your wishlist is empty.</div></div>
+  <% } %>
+  <% jobs.forEach(j => { %>
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title"><%= j.title %></h5>
+          <p class="text-muted mb-1">Wage: ₹<%= j.wage %></p>
+          <p class="mb-1">Location: <%= j.location %></p>
+          <p class="small">Deadline: <%= j.deadline ? new Date(j.deadline).toDateString() : 'N/A' %></p>
+          <div class="d-flex gap-2">
+            <form method="post" action="/jobs/<%= j._id %>/apply">
+              <button class="btn btn-sm btn-primary" type="submit">Apply Now</button>
+            </form>
+            <form method="post" action="/wishlist/<%= j._id %>/toggle">
+              <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-heartbreak"></i> Remove</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>

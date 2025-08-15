@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0"><i class="bi bi-briefcase me-2"></i>Job Details</h3>
+  <a class="btn btn-secondary btn-sm" href="javascript:history.back()"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h4 class="mb-2"><%= job.title %></h4>
+        <p class="mb-1"><strong>Wage:</strong> ₹<%= job.wage %></p>
+        <p class="mb-1"><strong>Location:</strong> <%= job.location %></p>
+        <p class="mb-1"><strong>Status:</strong> <span class="badge bg-info text-dark text-uppercase"><%= job.status %></span></p>
+        <p class="mb-1"><strong>Deadline:</strong> <%= job.deadline ? new Date(job.deadline).toDateString() : 'N/A' %></p>
+        <p class="mb-1"><strong>Posted By:</strong> <%= job.postedBy ? job.postedBy.name : '-' %></p>
+        <p class="mb-3"><strong>Assigned To:</strong> <%= job.appliedBy ? job.appliedBy.name : '-' %></p>
+        <div>
+          <strong>Description</strong>
+          <p class="mt-1"><%= job.description %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h6 class="mb-2"><i class="bi bi-geo-alt me-1"></i>Map</h6>
+        <div id="map" style="height: 350px; border-radius: 0.5rem; overflow: hidden;"></div>
+        <small class="text-muted d-block mt-2">Geocoding by OpenStreetMap Nominatim. Marker is approximate.</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin="" />
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin="">
+</script>
+<script>
+  (function() {
+    const locationText = <%- JSON.stringify(job.location || '') %>;
+    const map = L.map('map');
+    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Try geocoding the location string via Nominatim
+    if (locationText) {
+      const url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(locationText);
+      fetch(url, { headers: { 'Accept': 'application/json' } })
+        .then(r => r.json())
+        .then(results => {
+          if (results && results.length) {
+            const { lat, lon, display_name } = results[0];
+            const coords = [parseFloat(lat), parseFloat(lon)];
+            map.setView(coords, 13);
+            const marker = L.marker(coords).addTo(map);
+            marker.bindPopup(`<strong>${display_name}</strong>`).openPopup();
+          } else {
+            // Fallback: default view
+            map.setView([0,0], 2);
+          }
+        })
+        .catch(() => {
+          map.setView([0,0], 2);
+        });
+    } else {
+      map.setView([0,0], 2);
+    }
+  })();
+</script>

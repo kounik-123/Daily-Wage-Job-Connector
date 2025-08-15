@@ -1,0 +1,26 @@
+<h3>Create a Job</h3>
+<form method="post" action="/jobs" class="card p-3 shadow-sm mt-2">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Title</label>
+      <input class="form-control" type="text" name="title" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Wage (Rupees)</label>
+      <input class="form-control" type="number" min="0" name="wage" required />
+    </div>
+    <div class="col-12">
+      <label class="form-label">Description</label>
+      <textarea class="form-control" name="description" rows="4" required></textarea>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Location</label>
+      <input class="form-control" type="text" name="location" required />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Deadline</label>
+      <input class="form-control" type="date" name="deadline" />
+    </div>
+  </div>
+  <button class="btn btn-primary mt-3" type="submit">Post Job</button>
+</form>

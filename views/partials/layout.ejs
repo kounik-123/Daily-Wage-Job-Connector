@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= title || 'Daily Wage Job Connector' %></title>
+    <link rel="icon" href="data:," />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+  </head>
+  <body data-auth="<%= user ? 'true' : 'false' %>">
+    <nav class="navbar navbar-expand-lg navbar-light topbar sticky-top">
+      <div class="container pe-lg-0">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+          <i class="fa-solid fa-handshake brand-icon me-2"></i>
+          Kaaj-Khuji
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topbar" aria-controls="topbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topbar">
+          <!-- Navigation Links or Search (center) -->
+          <% if (!user) { %>
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link px-3" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="/how-it-works">How It Works</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="/features">Features</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="/testimonials">Team</a></li>
+            <li class="nav-item"><a class="nav-link px-3" href="/contact">Contact</a></li>
+          </ul>
+          <% } else { %>
+          <form
+            class="d-flex flex-grow-1 mx-lg-4 my-3 my-lg-0 justify-content-center"
+            role="search"
+            method="get"
+            action="<%= user.role === 'worker' ? '/jobs/available' : '/jobs/active' %>"
+            aria-label="Search jobs"
+          >
+            <div class="input-group topbar-search w-100" style="max-width:520px;">
+              <span class="input-group-text bg-transparent border-0 ps-0">
+                <i class="bi bi-search text-secondary"></i>
+              </span>
+              <input
+                type="text"
+                name="q"
+                class="form-control search-input"
+                placeholder="Search jobs by title, description, or location..."
+                value="<%= typeof q !== 'undefined' ? q : '' %>"
+              />
+            </div>
+          </form>
+          <% } %>
+          
+          <!-- Right side - conditional rendering -->
+          <div class="d-flex align-items-center gap-4 ms-lg-2 me-0">
+            <% if (!user) { %>
+              <a href="/auth/login" class="btn btn-outline-primary rounded-pill px-4">Login</a>
+              <a href="/auth/signup" class="btn btn-gradient-blue rounded-pill px-4">Sign Up</a>
+            <% } else { %>
+              <div class="right-actions d-flex align-items-center gap-4">
+                <% if (user.role === 'worker') { %>
+                <a class="nav-link position-relative" href="/wishlist" title="Wishlist"><i class="bi bi-heart"></i></a>
+                <% } %>
+                <a class="nav-link position-relative" href="/notifications" title="Notifications">
+                  <i class="bi bi-bell"></i>
+                  <% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %>
+                    <span class="notify-dot" aria-label="<%= unreadCount %> unread notifications"></span>
+                  <% } %>
+                </a>
+                <a class="nav-link" href="/mail" title="Mail"><i class="bi bi-envelope"></i></a>
+                
+                <div class="dropdown">
+                  <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <% if (user.profilePhoto) { %>
+                      <img src="/uploads/<%= user.profilePhoto %>" alt="Profile" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                    <% } else { %>
+                      <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                        <i class="bi bi-person-fill text-white"></i>
+                      </div>
+                    <% } %>
+                    <span class="d-none d-md-inline"><%= user.name %></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end topbar-profile-menu">
+                    <li><a class="dropdown-item d-flex align-items-center" href="/settings"><i class="bi bi-gear me-2"></i><span>Settings</span></a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li>
+                      <form method="post" action="/auth/logout">
+                        <button class="dropdown-item d-flex align-items-center" type="submit"><i class="bi bi-box-arrow-right me-2"></i><span>Sign Out</span></button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-md-3 col-lg-2 border-end min-vh-100 <%= user ? '' : 'd-none' %>" id="sidebar">
+          <%- include('../partials/sidebar'); %>
+        </div>
+        <div class="<%= user ? 'col-12 col-md-9 col-lg-10' : 'col-12' %> p-4" id="content">
+          <%- body %>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white py-5 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 mb-4">
+            <div class="footer-brand">
+              <h5 class="fw-bold mb-3">
+                <i class="fa-solid fa-handshake brand-icon me-2"></i> Kaaj-Khuji
+              </h5>
+              <p class="text-light-gray mb-3">
+                Connecting skilled workers with employers for daily wage jobs. Making hiring simple, reliable, and hassle-free.
+              </p>
+              <div class="social-links">
+                <a href="#" class="social-link me-3" title="Facebook">
+                  <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" class="social-link me-3" title="Twitter">
+                  <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="social-link me-3" title="Instagram">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <a href="#" class="social-link" title="LinkedIn">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-2 col-md-6 mb-4">
+            <h6 class="fw-semibold mb-3 text-warning">Quick Links</h6>
+            <ul class="footer-links list-unstyled">
+              <li><a href="/" class="footer-link">Home</a></li>
+              <li><a href="/how-it-works" class="footer-link">How It Works</a></li>
+              <li><a href="/features" class="footer-link">Features</a></li>
+              <li><a href="/testimonials" class="footer-link">Testimonials</a></li>
+              <li><a href="/contact" class="footer-link">Contact</a></li>
+            </ul>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 mb-4">
+            <h6 class="fw-semibold mb-3 text-warning">For Workers</h6>
+            <ul class="footer-links list-unstyled">
+              <li><a href="/jobs/available" class="footer-link">How to Find Jobs</a></li>
+              <li><a href="/auth/signup" class="footer-link">Create Profile</a></li>
+              <li><a href="#" class="footer-link">Safety Tips</a></li>
+              <li><a href="#" class="footer-link">Payment Info</a></li>
+            </ul>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 mb-4">
+            <h6 class="fw-semibold mb-3 text-warning">For Employers</h6>
+            <ul class="footer-links list-unstyled">
+              <li><a href="#" class="footer-link">How to Hire</a></li>
+              <li><a href="/jobs/create" class="footer-link">Post a Job</a></li>
+              <li><a href="#" class="footer-link">Verification Process</a></li>
+              <li><a href="#" class="footer-link">Pricing</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <hr class="my-4 border-secondary">
+        
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0 text-light-gray">
+              © 2023 Kaaj-Khuji. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="footer-links d-inline-flex">
+              <a href="#" class="footer-link me-3">Privacy Policy</a>
+              <a href="#" class="footer-link me-3">Terms of Service</a>
+              <a href="#" class="footer-link">Support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Confirm Dialog -->
+    <div class="modal fade modal-confirm" id="confirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+          <div class="modal-header">
+            <div class="d-flex align-items-center gap-2">
+              <div class="auth-icon modal-icon rounded-circle d-inline-flex align-items-center justify-content-center">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+              </div>
+              <h5 class="modal-title mb-0">Confirm Action</h5>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="confirmModalMessage" class="mb-0">Are you sure?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-gradient-blue rounded-pill" id="confirmModalConfirmBtn">Yes, Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({ duration: 800, once: true, offset: 60 });
+    </script>
+  </body>
+</html>
+

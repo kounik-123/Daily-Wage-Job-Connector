@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h3>Wallet</h3>
+  <span class="text-muted">Worker</span>
+</div>
+<div class="row g-4 mt-1">
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">Total Earnings<br/><strong>₹<%= summary.earnings %></strong></div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">Pending Earnings<br/><strong>₹<%= summary.pendingEarnings %></strong></div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">Completed Jobs<br/><strong><%= summary.received %></strong></div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm"><div class="card-body">Active Jobs<br/><strong><%= summary.pending %></strong></div></div>
+  </div>
+</div>
+
+<div class="row g-4 mt-1">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Recent Activity</h5>
+        <% if (summary.recent && summary.recent.length) { %>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead><tr><th>Job</th><th>Status</th><th class="text-end">Amount (₹)</th><th>Date</th></tr></thead>
+            <tbody>
+              <% summary.recent.forEach(r => { %>
+                <tr>
+                  <td><a href="/jobs/<%= r.id %>"><%= r.title %></a></td>
+                  <td>
+                    <% const cls = r.status === 'completed' ? 'success' : (r.status === 'active' ? 'warning' : 'secondary'); %>
+                    <span class="badge bg-<%= cls %> text-dark"><%= r.status %></span>
+                  </td>
+                  <td class="text-end">₹<%= r.amount %></td>
+                  <td><%= new Date(r.date).toLocaleDateString() %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } else { %>
+          <div class="text-muted">No recent activity.</div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
