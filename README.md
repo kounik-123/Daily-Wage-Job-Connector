@@ -1,4 +1,4 @@
-<img src="/images/Daily-Wage-Job-Connector.jpg" width="300"/>
+
 <img width="1901" height="904" alt="Screenshot 2025-08-16 040220" src="https://github.com/user-attachments/assets/f8c64fcb-c9e9-4650-9195-de67a8ee78d7" />
 # Daily Wage Job Connector (DWJC)
 
