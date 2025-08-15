@@ -1,3 +1,5 @@
+<img src="/images/Daily-Wage-Job-Connector.jpg" width="300"/>
+
 # Daily Wage Job Connector (DWJC)
 
 Full-stack Node.js + Express + EJS app connecting Users (job posters) and Workers (job seekers). Includes role-based auth, job flows, wallet stats (Chart.js), real-time updates (Socket.io), and email notifications (Nodemailer).
